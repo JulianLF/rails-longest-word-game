@@ -14,6 +14,8 @@ class GamesController < ApplicationController
     return @result if @result[:score].zero?
 
     @result = parse_json(params[:word], @result)
+    store_score(@result)
+    @score = session[:score]
   end
 
   private
@@ -39,5 +41,13 @@ class GamesController < ApplicationController
       result[:message] = 'does not seem to be a valid English word...'
     end
     result
+  end
+
+  def store_score(result)
+    if session[:score]
+      session[:score] += result[:score]
+    else
+      session[:score] = result[:score]
+    end
   end
 end
